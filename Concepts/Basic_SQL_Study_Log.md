@@ -1,22 +1,26 @@
-# [백문이불여일타] 데이터 분석을 위한 기초 SQL
+# 🐣 기초 SQL 스터디 로그 (Basic SQL)
 
-진행 상태: 완료
-마감일: 2025년 7월 8일 → 2025년 7월 10일
-프로젝트: (공부) SQL (https://www.notion.so/SQL-232be5e372b080098162cd2246c78034?pvs=21)
+> **프로젝트**: [백문이불여일타] 데이터 분석을 위한 기초 SQL
+> **기간**: 2025.07.08 ~ 2025.07.10
+> **상태**: 완료 ✅
 
-7-16
+---
 
-1. **Weather Observation Station 12**
+## 📅 7월 16일 학습 내용
 
-- IN은 정확한 문자열 값에만 사용 가
+### 1. Weather Observation Station 12 (HackerRank)
+**핵심 개념**: `NOT IN`과 `NOT LIKE`의 활용
 
+- **포인트**: `IN`은 정확한 문자열 값에만 사용 가능하다. 패턴 매칭을 하려면 `LIKE`를 써야 한다.
+
+#### ❌ 오답 (잘못된 사용)
 ```sql
 SELECT DISTINCT *
 FROM Station
-WHERE CITY NOT IN ('a%','e%''i%''o%''u%')
-AND NOT IN ('%a', '%e', '%i', '%o', '%u')
+WHERE CITY NOT IN ('a%','e%','i%','o%','u%') -- IN은 와일드카드(%)를 인식하지 못함
 ```
 
+#### ✅ 정답 (올바른 사용)
 ```sql
 SELECT DISTINCT city
 FROM Station
@@ -32,33 +36,44 @@ AND city NOT LIKE '%o'
 AND city NOT LIKE '%u'
 ```
 
-1.  **Higher Than 75 Marks**
-    - name에서 끝자리 3개를 기준으로 정렬해
+---
+
+### 2. Higher Than 75 Marks
+**핵심 개념**: 문자열 함수와 정렬
+
+- **문제**: 점수가 75점보다 높은 학생을 이름의 **끝 3글자** 기준으로 정렬하라.
+- **해결**: `RIGHT()` 함수 사용.
 
 ```sql
 SELECT Name
 FROM STUDENTS
 WHERE Marks > 75
-Order BY RIGHT(Name, 3), ID
+ORDER BY RIGHT(Name, 3), ID;
+```
+> 💡 **Tip**: SQL에서도 `RIGHT`, `LEFT`, `SUBSTR` 같은 문자열 함수를 자유롭게 사용할 수 있다.
 
--- SQL 도 RIGHT, LEFT, SUBSTR 함수 사용가
+---
+
+### 3. Weather Observation Station 15
+**핵심 개념**: 집계 함수와 반올림
+
+- **함수 정리**:
+  - `CEIL()`: 올림
+  - `FLOOR()`: 내림
+  - `ROUND()`: 반올림
+
+#### 문제 풀이
+가장 큰 값을 찾기 위해 정렬 후 `LIMIT` 사용.
+
+```sql
+SELECT ROUND(LONG_W, 4)
+FROM STATION
+WHERE LAT_N < 137.2345
+ORDER BY LAT_N DESC
+LIMIT 1;
 ```
 
-1.  **Weather Observation Station 15**
-    1. CEIL
-    2. FLOOR
-    3. ROUND 가
-    
-    ```
-    /* SELECT ROUND(LONG_W, 4)
-    FROM STATION
-    WHERE LAT_N < 137.2345
-    ORDER BY LAT_N DESC
-    LIMIT 1
-    */
-    ```
-    
+---
 
-제일 큰 거만 추출해라 → 정렬 → LIMIT
-
-[[데이터리안]_SQL_Basic_Cheat_Sheet (1).pdf](%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A1%E1%86%AB_SQL_Basic_Cheat_Sheet_(1).pdf)
+## 🔗 참고 자료
+- [데이터리안 SQL Basic Cheat Sheet](https://datarian.io/)
