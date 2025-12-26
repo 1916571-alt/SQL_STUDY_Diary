@@ -1,25 +1,23 @@
-# 📔 SQL 공부 다이어리 (SQL Study Diary)
+# 📔 SQL 공부 저장소 (SQL Study Repository)
 
-SQL 공부 여정을 기록하는 저장소에 오신 것을 환영합니다! 이 곳은 매일의 공부 기록부터 심화 개념 정리, 알고리즘 문제 풀이까지 SQL과 관련된 모든 것을 아카이빙하는 공간입니다.
+SQL 공부 여정을 기록하는 저장소에 오신 것을 환영합니다! 이 곳은 알고리즘 문제 풀이와 중요 개념 정리를 아카이빙하는 공간입니다.
 
 ## 📂 저장소 구조 (Repository Structure)
 
-이 저장소는 체계적이면서도 유연한 관리를 위해 세 가지 주요 섹션으로 구성되어 있습니다:
+이 저장소는 문제 풀이(Problems)와 개념 정리(Concepts) 두 가지 핵심 축으로 운영됩니다.
 
-### 1. 📅 [Daily_Log](./Daily_Log)
-"다이어리"라는 이름에 걸맞게 매일의 기록을 남기는 공간입니다.
-- **내용**: 그날 공부한 내용, 짧은 생각, 스크랩, "오늘 배운 것(TIL)" 등을 자유롭게 기록합니다.
-- **파일 명명 규칙**: `YYYY-MM-DD.md` (예: `2024-01-01.md`) 또는 주제가 명확하다면 주제별로 작성합니다.
+### 1. 🧩 [Problems](./Problems)
+다양한 플랫폼의 SQL 문제 풀이를 모나둔 핵심 공간입니다. 플랫폼별로 폴더가 나누어져 있습니다.
+
+- **[Programmers](./Problems/Programmers)**: 프로그래머스 SQL 고득점 Kit 등 문제 풀이
+- **[Solve_SQL_2025](./Problems/Solve_SQL_2025)**: SolveSQL 문제 풀이 (2025 시즌)
+- **[LeetCode](./Problems/LeetCode)**: 리트코드 데이터베이스 문제
+- **[HackerRank](./Problems/HackerRank)**: 해커랭크 SQL 문제
 
 ### 2. 📚 [Concepts](./Concepts)
 나만의 "교과서" 또는 "위키"를 만드는 공간입니다.
-- **내용**: 특정 SQL 주제에 대해 깊이 있게 공부한 내용을 정리합니다. Daily Log에 흩어진 내용을 나중에 보기 좋게 요약해서 이곳으로 옮깁니다.
+- **내용**: 특정 SQL 주제에 대해 깊이 있게 공부한 내용을 정리합니다.
 - **예시**: `Joins.md` (조인 완벽 정리), `Indexes.md` (인덱스 개념), `Window_Functions.md` (윈도우 함수 활용).
-
-### 3. 🧩 [Problems](./Problems)
-SQL 코딩 테스트 및 연습 문제 풀이를 저장하는 공간입니다.
-- **내용**: 다양한 플랫폼의 문제에 대한 풀이 코드와 해설을 저장합니다.
-- **구조**: 플랫폼별 또는 난이도별로 폴더를 나누어 관리합니다. (예: `LeetCode`, `Programmers`, `HackerRank`)
 
 ---
 
@@ -38,6 +36,7 @@ SQL 코딩 테스트 및 연습 문제 풀이를 저장하는 공간입니다.
 - [SQLZoo (SQL 튜토리얼)](https://sqlzoo.net/)
 - [Programmers SQL 고득점 Kit](https://school.programmers.co.kr/learn/challenges?tab=sql_practice_kit)
 - [LeetCode SQL Study Plan](https://leetcode.com/study-plan/sql/)
+- [SolveSQL](https://solvesql.com/)
 
 ---
 
