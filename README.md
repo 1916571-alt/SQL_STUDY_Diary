@@ -96,13 +96,20 @@ FROM user_activity GROUP BY ym;
 
 ### Programmers SQL
 
-| 난이도 | 풀이 현황 |
-|--------|----------|
-| LV5 | 상품을 구매한 회원 비율 구하기 |
-| LV4 | 입양 시각 구하기(2), 오프라인-온라인 판매 데이터 통합하기 |
-| LV3 | 업그레이드 할 수 없는 아이템 구하기 |
-
 > 상세 풀이는 [Problems/Programmers](./Problems/Programmers) 참조
+
+---
+
+## Review Queue (재풀이 필요)
+
+다시 복습이 필요한 문제들입니다.
+
+| 난이도 | 유형 | 문제명 | 핵심 포인트 |
+|--------|------|--------|-------------|
+| **LV5** | JOIN | [상품을 구매한 회원 비율 구하기](./Problems/Programmers/JOIN/%5BLV_5%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%83%81%ED%92%88%EC%9D%84%20%EA%B5%AC%EB%A7%A4%ED%95%9C%20%ED%9A%8C%EC%9B%90%20%EB%B9%84%EC%9C%A8%20%EA%B5%AC%ED%95%98%EA%B8%B0.md) | 복합 JOIN + 비율 계산 |
+| **LV4** | GROUP BY | [입양 시각 구하기(2)](./Problems/Programmers/GROUP%20BY/%5BLV_4%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%9E%85%EC%96%91%20%EC%8B%9C%EA%B0%81%20%EA%B5%AC%ED%95%98%EA%B8%B0%282%29.md) | 연속 숫자 생성 + LEFT JOIN |
+| **LV4** | SELECT | [오프라인-온라인 판매 데이터 통합하기](./Problems/Programmers/SELECT/%5BLV_4%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%98%A4%ED%94%84%EB%9D%BC%EC%9D%B8-%EC%98%A8%EB%9D%BC%EC%9D%B8%20%ED%8C%90%EB%A7%A4%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%86%B5%ED%95%A9%ED%95%98%EA%B8%B0.md) | UNION ALL + 날짜 처리 |
+| **LV3** | IS NULL | [업그레이드 할 수 없는 아이템 구하기](./Problems/Programmers/IS%20NULL/%5BLV_3%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%97%85%EA%B7%B8%EB%A0%88%EC%9D%B4%EB%93%9C%20%ED%95%A0%20%EC%88%98%20%EC%97%86%EB%8A%94%20%EC%95%84%EC%9D%B4%ED%85%9C%20%EA%B5%AC%ED%95%98%EA%B8%B0.md) | NOT IN / NOT EXISTS |
 
 ---
 
