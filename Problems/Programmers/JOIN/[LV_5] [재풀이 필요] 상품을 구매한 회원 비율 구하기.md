@@ -43,11 +43,10 @@
 ---
 
 ### 💡 풀이 과정
-- **2021년에 가입한 전체 회원 수**를 먼저 구해야 함 (분모).
-- 이를 위해 `WITH` 절을 사용하여 2021년 가입 회원과 그 총 수를 정의.
-- `ONLINE_SALE`과 조인하여 구매한 회원 수를 집계.
-- 전체 회원 수(`total_users`)는 모든 행에 동일하게 적용되어야 하므로 `CROSS JOIN`을 사용.
+- **CTE 방식 (절차적 사고)**: 2021년 가입자 리스트 → 그 총 합계 → 메인 쿼리와 조인 순으로 단계를 나누어 해결.
+- **서브쿼리 방식 (결과 중심 사고)**: "내가 필요한 분모는 **(2021년 가입자 수)**라는 하나의 숫자다"라고 생각하여 `SELECT` 절에 직접 삽입.
 
+#### 1. CTE 방식 (기존)
 ```sql
 WITH JOIN_USER AS (
   SELECT
@@ -73,6 +72,30 @@ CROSS JOIN TOTAL
 GROUP BY
   YEAR(OS.SALES_DATE),
   MONTH(OS.SALES_DATE)
+ORDER BY
+  YEAR,
+  MONTH;
+```
+
+#### 2. 서브쿼리 방식 (Inside-Out)
+- 분모가 되는 전체 회원 수를 `(SELECT COUNT(*) FROM ...)` 형태의 하나의 **'값'**으로 취급합니다.
+- `WHERE` 절에서 2021년 가입자 여부만 필터링하면 훨씬 간결해집니다.
+
+```sql
+SELECT
+  YEAR(SALES_DATE) AS YEAR,
+  MONTH(SALES_DATE) AS MONTH,
+  COUNT(DISTINCT USER_ID) AS PURCHASED_USERS,
+  ROUND(COUNT(DISTINCT USER_ID) / (SELECT COUNT(*) FROM USER_INFO WHERE YEAR(JOINED) = 2021), 1) AS PURCHASED_RATIO
+FROM ONLINE_SALE
+WHERE USER_ID IN (
+  SELECT USER_ID
+  FROM USER_INFO
+  WHERE YEAR(JOINED) = 2021
+)
+GROUP BY
+  YEAR,
+  MONTH
 ORDER BY
   YEAR,
   MONTH;
