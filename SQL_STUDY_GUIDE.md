@@ -9,8 +9,9 @@ To maintain consistency in the SQL study diary, follow these formatting and orga
 
 ## 2. Filename Convention
 
-- **Re-solve required** (`재풀이 여부: O`): `[재풀이 필요] 문제명.md`
-- **Normal**: `문제명.md`
+- **General Format**: `[LV_N] [재풀이 필요] 문제명.md`
+- **Re-solve required** (`재풀이 여부: O`): `[LV_N] [재풀이 필요] 문제명.md`
+- **Normal**: `[LV_N] 문제명.md`
 - **Note**: Replace slashes (`/`) in problem names with hyphens (`-`) to avoid directory issues.
 
 ## 3. Markdown Content structure

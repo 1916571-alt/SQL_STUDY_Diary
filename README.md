@@ -47,4 +47,4 @@ SQL 공부 여정을 기록하는 저장소에 오신 것을 환영합니다! �
 ## 🔁 재풀이 필요 문제 (Problems to Re-solve)
 가장 최근에 오답이 있었거나 다시 풀어봐야 하는 문제들입니다.
 
-- [[SELECT] 오프라인/온라인 판매 데이터 통합하기](./Problems/Programmers/SELECT/\[재풀이%20필요\]%20오프라인-온라인%20판매%20데이터%20통합하기.md)
+- [[LV_4] [SELECT] 오프라인-온라인 판매 데이터 통합하기](./Problems/Programmers/SELECT/%5BLV_4%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%98%A4%ED%94%84%EB%9D%BC%EC%9D%B8-%EC%98%A8%EB%9D%BC%EC%9D%B8%20%ED%8C%90%EB%A7%A4%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%86%B5%ED%95%A9%ED%95%98%EA%B8%B0.md)
