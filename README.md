@@ -17,7 +17,7 @@ SQL 공부 여정을 기록하는 저장소에 오신 것을 환영합니다! �
 ### 2. 📚 [Concepts](./Concepts)
 나만의 "교과서" 또는 "위키"를 만드는 공간입니다.
 - **내용**: 특정 SQL 주제에 대해 깊이 있게 공부한 내용을 정리합니다.
-- **예시**: `Joins.md` (조인 완벽 정리), `Indexes.md` (인덱스 개념), `Window_Functions.md` (윈도우 함수 활용).
+- **예시**: [Subquery_vs_CTE.md](./Concepts/Subquery_vs_CTE.md) (서브쿼리 vs CTE 사고법), `Joins.md` (조인 완벽 정리), `Indexes.md` (인덱스 개념).
 
 ---
 
