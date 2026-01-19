@@ -1,0 +1,16 @@
+# Image files (personal reference materials)
+/image/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+.claude/
+
+# Temporary files
+*.tmp
+*.temp
+tmpclaude-*

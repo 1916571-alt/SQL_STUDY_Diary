@@ -19,6 +19,45 @@ SQL 공부 여정을 기록하는 저장소에 오신 것을 환영합니다! �
 - **내용**: 특정 SQL 주제에 대해 깊이 있게 공부한 내용을 정리합니다.
 - **예시**: [Subquery_vs_CTE.md](./Concepts/Subquery_vs_CTE.md) (서브쿼리 vs CTE 사고법), `Joins.md` (조인 완벽 정리), `Indexes.md` (인덱스 개념).
 
+### 3. 📖 [Curriculum](./Curriculum)
+SQL 코딩테스트 심화 커리큘럼과 연습 환경입니다.
+- **[SQL_CodingTest_Advanced_Curriculum.md](./Curriculum/SQL_CodingTest_Advanced_Curriculum.md)**: 프로그래머스 SQL 코딩테스트 대비 심화 커리큘럼 (47문제)
+- **[DB_Fiddle_Practice.sql](./Curriculum/DB_Fiddle_Practice.sql)**: DB Fiddle 웹 연습용 샘플 데이터
+
+### 4. 🛠️ [XAMPP MySQL 연습 환경](./XAMPP%20MySQL.session.sql)
+VSCode에서 직접 SQL 쿼리를 연습할 수 있는 로컬 환경입니다.
+- **사용 DB**: MySQL (XAMPP)
+- **테이블**: users, stores, products, orders, order_items, app_logs, marketing_costs, campaigns 등 11개
+- **데이터**: 커피 주문 앱 시나리오 (고객 30명, 주문 100건, 매장 5개 등)
+
+---
+
+## 🔄 XAMPP MySQL 연습 환경 시작하기
+
+매번 컴퓨터를 켤 때마다 아래 절차를 따르세요:
+
+### Step 1: XAMPP MySQL 서버 시작
+1. **XAMPP Control Panel** 실행
+2. **MySQL** 옆의 **Start** 버튼 클릭
+3. MySQL이 초록색으로 바뀌면 서버 실행 완료
+
+### Step 2: VSCode에서 DB 연결 확인
+1. VSCode 열기
+2. 좌측 사이드바에서 **SQLTools** 아이콘 클릭 (데이터베이스 아이콘)
+3. **XAMPP MySQL** 연결 클릭하여 연결 확인
+4. 연결 안 되면: 연결 우클릭 → **Connect**
+
+### Step 3: 쿼리 연습 시작
+1. `XAMPP MySQL.session.sql` 파일 열기
+2. 파일 하단에 쿼리 작성
+3. 쿼리 선택 후 **Ctrl+E, E** 로 실행
+
+### (최초 1회만) 데이터베이스 초기화
+처음 설정하거나 데이터를 리셋하고 싶을 때:
+1. `XAMPP MySQL.session.sql` 파일 전체 선택 (**Ctrl+A**)
+2. **Ctrl+E, E** 로 실행
+3. `Setup Complete!` 메시지 확인
+
 ---
 
 ## 🚀 학습 로드맵 (예시)
