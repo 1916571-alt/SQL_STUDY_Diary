@@ -234,12 +234,12 @@ FROM (
 
 ```sql
 SELECT
-    DATE_FORMAT(order_datetime, '%Y-%m') AS year_month,
+    DATE_FORMAT(order_datetime, '%Y-%m') AS ym,
     SUM(total_amount) AS monthly_revenue,
     SUM(SUM(total_amount)) OVER (ORDER BY DATE_FORMAT(order_datetime, '%Y-%m')) AS cumulative_revenue
 FROM orders
 GROUP BY DATE_FORMAT(order_datetime, '%Y-%m')
-ORDER BY year_month;
+ORDER BY ym;
 ```
 
 **핵심 포인트**:
@@ -256,19 +256,19 @@ ORDER BY year_month;
 ```sql
 WITH monthly AS (
     SELECT
-        DATE_FORMAT(order_datetime, '%Y-%m') AS year_month,
+        DATE_FORMAT(order_datetime, '%Y-%m') AS ym,
         SUM(total_amount) AS revenue
     FROM orders
     GROUP BY DATE_FORMAT(order_datetime, '%Y-%m')
 )
 SELECT
-    year_month,
+    ym,
     revenue,
-    LAG(revenue) OVER (ORDER BY year_month) AS prev_revenue,
-    revenue - LAG(revenue) OVER (ORDER BY year_month) AS diff,
+    LAG(revenue) OVER (ORDER BY ym) AS prev_revenue,
+    revenue - LAG(revenue) OVER (ORDER BY ym) AS diff,
     ROUND(
-        (revenue - LAG(revenue) OVER (ORDER BY year_month))
-        / LAG(revenue) OVER (ORDER BY year_month) * 100, 1
+        (revenue - LAG(revenue) OVER (ORDER BY ym))
+        / LAG(revenue) OVER (ORDER BY ym) * 100, 1
     ) AS change_rate_pct
 FROM monthly;
 ```
