@@ -1,92 +1,136 @@
-# 📔 SQL 공부 저장소 (SQL Study Repository)
+# SQL Study Diary
 
-SQL 공부 여정을 기록하는 저장소에 오신 것을 환영합니다! 이 곳은 알고리즘 문제 풀이와 중요 개념 정리를 아카이빙하는 공간입니다.
+데이터 분석 및 SQL 코딩테스트 준비를 위한 학습 기록 저장소입니다.
 
-## 📂 저장소 구조 (Repository Structure)
+## Core Skills
 
-이 저장소는 문제 풀이(Problems)와 개념 정리(Concepts) 두 가지 핵심 축으로 운영됩니다.
-
-### 1. 🧩 [Problems](./Problems)
-다양한 플랫폼의 SQL 문제 풀이를 모나둔 핵심 공간입니다. 플랫폼별로 폴더가 나누어져 있습니다.
-
-- **[Programmers](./Problems/Programmers)**: 프로그래머스 SQL 고득점 Kit 등 문제 풀이
-- **[Solve_SQL_2025](./Problems/Solve_SQL_2025)**: SolveSQL 문제 풀이 (2025 시즌)
-- **[LeetCode](./Problems/LeetCode)**: 리트코드 데이터베이스 문제
-- **[HackerRank](./Problems/HackerRank)**: 해커랭크 SQL 문제
-
-### 2. 📚 [Concepts](./Concepts)
-나만의 "교과서" 또는 "위키"를 만드는 공간입니다.
-- **내용**: 특정 SQL 주제에 대해 깊이 있게 공부한 내용을 정리합니다.
-- **예시**: [Subquery_vs_CTE.md](./Concepts/Subquery_vs_CTE.md) (서브쿼리 vs CTE 사고법), `Joins.md` (조인 완벽 정리), `Indexes.md` (인덱스 개념).
-
-### 3. 📖 [Curriculum](./Curriculum)
-SQL 코딩테스트 심화 커리큘럼과 연습 환경입니다.
-- **[SQL_CodingTest_Advanced_Curriculum.md](./Curriculum/SQL_CodingTest_Advanced_Curriculum.md)**: 프로그래머스 SQL 코딩테스트 대비 심화 커리큘럼 (47문제)
-- **[DB_Fiddle_Practice.sql](./Curriculum/DB_Fiddle_Practice.sql)**: DB Fiddle 웹 연습용 샘플 데이터
-
-### 4. 🛠️ [XAMPP MySQL 연습 환경](./XAMPP%20MySQL.session.sql)
-VSCode에서 직접 SQL 쿼리를 연습할 수 있는 로컬 환경입니다.
-- **사용 DB**: MySQL (XAMPP)
-- **테이블**: users, stores, products, orders, order_items, app_logs, marketing_costs, campaigns 등 11개
-- **데이터**: 커피 주문 앱 시나리오 (고객 30명, 주문 100건, 매장 5개 등)
+| 영역 | 상세 |
+|------|------|
+| **기본 문법** | JOIN (INNER/LEFT/RIGHT/SELF), GROUP BY, HAVING, Subquery |
+| **윈도우 함수** | ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, SUM OVER |
+| **비즈니스 지표** | 코호트 리텐션, User Type 분류, LTV, CAC, ROAS, RFM 분석 |
+| **데이터 처리** | 날짜 함수, 문자열 처리, NULL 핸들링, 피벗 테이블 |
 
 ---
 
-## 🔄 XAMPP MySQL 연습 환경 시작하기
+## Repository Structure
 
-매번 컴퓨터를 켤 때마다 아래 절차를 따르세요:
-
-### Step 1: XAMPP MySQL 서버 시작
-1. **XAMPP Control Panel** 실행
-2. **MySQL** 옆의 **Start** 버튼 클릭
-3. MySQL이 초록색으로 바뀌면 서버 실행 완료
-
-### Step 2: VSCode에서 DB 연결 확인
-1. VSCode 열기
-2. 좌측 사이드바에서 **SQLTools** 아이콘 클릭 (데이터베이스 아이콘)
-3. **XAMPP MySQL** 연결 클릭하여 연결 확인
-4. 연결 안 되면: 연결 우클릭 → **Connect**
-
-### Step 3: 쿼리 연습 시작
-1. `XAMPP MySQL.session.sql` 파일 열기
-2. 파일 하단에 쿼리 작성
-3. 쿼리 선택 후 **Ctrl+E, E** 로 실행
-
-### (최초 1회만) 데이터베이스 초기화
-처음 설정하거나 데이터를 리셋하고 싶을 때:
-1. `XAMPP MySQL.session.sql` 파일 전체 선택 (**Ctrl+A**)
-2. **Ctrl+E, E** 로 실행
-3. `Setup Complete!` 메시지 확인
+```
+├── Problems/           # 플랫폼별 문제 풀이
+│   ├── Programmers/    # 프로그래머스 SQL (LV1~LV5)
+│   ├── LeetCode/       # LeetCode Database
+│   ├── HackerRank/     # HackerRank SQL
+│   └── Solve_SQL_2025/ # SolveSQL
+│
+├── Concepts/           # SQL 개념 정리
+│   └── Subquery_vs_CTE.md
+│
+└── Curriculum/         # 코딩테스트 심화 커리큘럼
+    ├── SQL_CodingTest_Advanced_Curriculum.md  # 학습 커리큘럼
+    └── SQL_Practice_Solutions.md              # 52문제 정답 및 해설
+```
 
 ---
 
-## 🚀 학습 로드맵 (예시)
+## Practice Problems (52 Problems)
 
-- [ ] **기본 문법**: SELECT, FROM, WHERE, ORDER BY
-- [ ] **집계 함수**: GROUP BY, HAVING, COUNT, SUM
-- [ ] **조인 (Join)**: INNER, LEFT, RIGHT, FULL
-- [ ] **심화 문법**: Window Functions, CTEs, Subqueries
-- [ ] **최적화**: Indexing, Execution Plans (실행 계획 분석)
+실무에서 자주 사용되는 SQL 패턴을 유형별로 정리했습니다.
+
+| 유형 | 문제 수 | 주요 내용 |
+|------|---------|----------|
+| **A. JOIN + 집계** | 8 | 다중 테이블 조인, 채널별 분석, 재구매율 |
+| **B. 윈도우 함수 (순위)** | 7 | TOP N 추출, 그룹별 순위, 중앙값 |
+| **C. 윈도우 함수 (집계)** | 7 | 누적합, 전월 대비, 이동평균 |
+| **D. 코호트/리텐션** | 6 | 월별 코호트, User Type, LTV |
+| **E. 날짜/문자열** | 4 | 연령대 분석, 요일별 패턴 |
+| **F. 복합 실전** | 5 | RFM 분석, 퍼널 분석, A/B 테스트 |
+| **G. 그로스해킹** | 12 | CAC, ROAS, 구매주기, CRM 캠페인 |
+| **X. 고급** | 3 | 연속일 분석, 세션 분석, 계층 구조 |
+
+> 모든 문제는 MySQL 8.0 기준이며, 로컬 환경에서 테스트 완료되었습니다.
 
 ---
 
-## 🔗 유용한 리소스
+## Key Highlights
 
-- [SQLZoo (SQL 튜토리얼)](https://sqlzoo.net/)
+### 1. 비즈니스 지표 SQL 구현
+
+```sql
+-- 코호트 리텐션: 가입 월 기준 월별 잔존율
+WITH cohort AS (
+    SELECT user_id, DATE_FORMAT(created_at, '%Y-%m') AS cohort_month FROM users
+),
+monthly_orders AS (
+    SELECT DISTINCT user_id, DATE_FORMAT(order_datetime, '%Y-%m') AS order_month FROM orders
+)
+SELECT cohort_month, months_since_signup, COUNT(DISTINCT user_id) AS active_users
+FROM cohort c JOIN monthly_orders m ON c.user_id = m.user_id
+GROUP BY cohort_month, months_since_signup;
+```
+
+### 2. 윈도우 함수 활용
+
+```sql
+-- 고객별 구매 주기 분석
+SELECT user_id,
+       AVG(DATEDIFF(order_datetime,
+           LAG(order_datetime) OVER (PARTITION BY user_id ORDER BY order_datetime)
+       )) AS avg_purchase_interval
+FROM orders GROUP BY user_id;
+```
+
+### 3. User Type 분류 (New / Current / Resurrected)
+
+```sql
+-- MAU를 유저 타입별로 분류
+SELECT ym,
+    SUM(CASE WHEN ym = first_month THEN 1 ELSE 0 END) AS new_users,
+    SUM(CASE WHEN prev_month = last_month THEN 1 ELSE 0 END) AS current_users,
+    SUM(CASE WHEN prev_month < last_month THEN 1 ELSE 0 END) AS resurrected_users
+FROM user_activity GROUP BY ym;
+```
+
+---
+
+## Problem Solving Log
+
+### Programmers SQL
+
+| 난이도 | 풀이 현황 |
+|--------|----------|
+| LV5 | 상품을 구매한 회원 비율 구하기 |
+| LV4 | 입양 시각 구하기(2), 오프라인-온라인 판매 데이터 통합하기 |
+| LV3 | 업그레이드 할 수 없는 아이템 구하기 |
+
+> 상세 풀이는 [Problems/Programmers](./Problems/Programmers) 참조
+
+---
+
+## Tech Stack
+
+- **Database**: MySQL 8.0, MariaDB
+- **Tools**: VSCode + SQLTools, XAMPP, DB Fiddle
+- **Concepts**: Window Functions, CTEs, Subqueries, Date Functions
+
+---
+
+## References
+
 - [Programmers SQL 고득점 Kit](https://school.programmers.co.kr/learn/challenges?tab=sql_practice_kit)
 - [LeetCode SQL Study Plan](https://leetcode.com/study-plan/sql/)
 - [SolveSQL](https://solvesql.com/)
 
 ---
 
-> *"Data is the new oil."* – Clive Humby
+<details>
+<summary><b>Local Development Setup</b></summary>
 
----
+### XAMPP MySQL 환경 설정
 
-## 🔁 재풀이 필요 문제 (Problems to Re-solve)
-가장 최근에 오답이 있었거나 다시 풀어봐야 하는 문제들입니다.
+1. XAMPP Control Panel → MySQL Start
+2. VSCode SQLTools로 연결
+3. `XAMPP MySQL.session.sql` 실행하여 샘플 데이터 로드
 
-- [[LV_5] [JOIN] 상품을 구매한 회원 비율 구하기](./Problems/Programmers/JOIN/%5BLV_5%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%83%81%ED%92%88%EC%9D%84%20%EA%B5%AC%EB%A7%A4%ED%95%9C%20%ED%9A%8C%EC%9B%90%20%EB%B9%84%EC%9C%A8%20%EA%B5%AC%ED%95%98%EA%B8%B0.md)
-- [[LV_4] [GROUP BY] 입양 시각 구하기(2)](./Problems/Programmers/GROUP%20BY/%5BLV_4%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%9E%85%EC%96%91%20%EC%8B%9C%EA%B0%81%20%EA%B5%AC%ED%95%98%EA%B8%B0%282%29.md)
-- [[LV_4] [SELECT] 오프라인-온라인 판매 데이터 통합하기](./Problems/Programmers/SELECT/%5BLV_4%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%98%A4%ED%94%84%EB%9D%BC%EC%9D%B8-%EC%98%A8%EB%9D%BC%EC%9D%B8%20%ED%8C%90%EB%A7%A4%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%86%B5%ED%95%A9%ED%95%98%EA%B8%B0.md)
-- [[LV_3] [IS NULL] 업그레이드 할 수 없는 아이템 구하기](./Problems/Programmers/IS%20NULL/%5BLV_3%5D%20%5B%EC%9E%AC%ED%92%80%EC%9D%B4%20%ED%95%84%EC%9A%94%5D%20%EC%97%85%EA%B7%B8%EB%A0%88%EC%9D%B4%EB%93%9C%20%ED%95%A0%20%EC%88%98%20%EC%97%86%EB%8A%94%20%EC%95%84%EC%9D%B4%ED%85%9C%20%EA%B5%AC%ED%95%98%EA%B8%B0.md)
+**테이블 구성**: users, stores, products, orders, order_items, app_logs, marketing_costs, campaigns 등 11개 테이블
+
+</details>
