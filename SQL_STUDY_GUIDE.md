@@ -52,4 +52,5 @@ Full description of the problem.
 
 ## 4. Git Workflow
 - Always `git pull` before working.
+- **README Update**: If a problem is added or updated to `재풀이 여부: O`, add its link to the `## 🔁 재풀이 필요 문제` section in the root `README.md`.
 - Keep commit messages descriptive (e.g., "Add [Problem Name] and reformat SQL").

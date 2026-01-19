@@ -41,3 +41,10 @@ SQL 공부 여정을 기록하는 저장소에 오신 것을 환영합니다! �
 ---
 
 > *"Data is the new oil."* – Clive Humby
+
+---
+
+## 🔁 재풀이 필요 문제 (Problems to Re-solve)
+가장 최근에 오답이 있었거나 다시 풀어봐야 하는 문제들입니다.
+
+- [[SELECT] 오프라인/온라인 판매 데이터 통합하기](./Problems/Programmers/SELECT/\[재풀이%20필요\]%20오프라인-온라인%20판매%20데이터%20통합하기.md)
