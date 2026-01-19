@@ -1016,9 +1016,9 @@ id | name | level | path
 
 ---
 
-### 유형 G: 페이타랩(패스오더) 맞춤 - 그로스해킹/CRM (12문제)
+### 유형 G: xx기업 맞춤 - 그로스해킹/CRM (12문제)
 
-> **페이타랩 채용 요건에 맞춘 실전 문제**
+> **xx기업 채용 요건에 맞춘 실전 문제**
 > 핵심 키워드: LTV, CAC, ROAS, ROI, 구매주기, 세그먼트, CRM 성과, 리텐션
 
 ---
@@ -1120,7 +1120,7 @@ campaign_name | sent_count | open_rate | click_rate | conversion_rate | campaign
 ```
 첫 구매 후 재주문한 고객 비율과
 첫 구매 → 재주문까지의 평균 일수를 월별로 분석하세요.
-(패스오더 재주문율 80% 목표)
+(재주문율 80% 목표)
 
 [테이블]
 - orders (id, user_id, order_date, total_amount)
@@ -1232,7 +1232,7 @@ rfm_segment | user_count | pre_campaign_revenue | post_campaign_revenue | campai
 - [ ] COALESCE, IFNULL로 NULL 처리
 - [ ] WITH (CTE) 사용하여 가독성 높은 쿼리 작성
 
-### 페이타랩(패스오더) 핵심 역량 (그로스해킹)
+### xx기업 핵심 역량 (그로스해킹)
 - [ ] **구매 주기 분석**: 고객별 평균 구매 간격 계산
 - [ ] **세그먼트 분류**: 구매 주기/RFM 기반 고객 분류
 - [ ] **LTV 계산**: 코호트별 Life Time Value
