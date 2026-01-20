@@ -464,8 +464,8 @@ MOD(a, b)               -- 나머지 (a % b)
 [테이블]
 - authors (id, name, country)
 - books (id, title, author_id, price, category)
-- orders (id, book_id, user_id, quantity, order_date)
-- reviews (id, book_id, user_id, rating, review_date)
+- book_orders (id, book_id, user_id, quantity, order_date)  ← 도서 주문
+- reviews (id, book_id, user_id, rating, review_date)  ← 도서 리뷰
 
 [Expected Output]
 author_name | total_sales | avg_rating | rated_book_cnt
@@ -533,7 +533,7 @@ first_half_customers | repurchase_customers | repurchase_rate
 
 [테이블]
 - products (id, name, category)
-- reviews (id, product_id, user_id, rating, content, created_at)
+- product_reviews (id, product_id, user_id, rating, content, created_at)  ← 상품 리뷰!
 
 [Expected Output]
 product_name | review_count | avg_rating | max_rating | min_rating
@@ -553,7 +553,7 @@ year_month | new_customer_revenue | existing_customer_revenue
 
 #### A-8. 동시 구매 상품 분석 ★★★
 ```
-상품 A(id=101)와 같은 주문에서 함께 구매된 상품들을
+상품 A(id=1)와 같은 주문에서 함께 구매된 상품들을
 동시 구매 횟수가 많은 순으로 상위 10개 출력하세요.
 
 [테이블]
@@ -628,7 +628,7 @@ name | total_score | percentile
 최대 기간(일수)을 구하세요.
 
 [테이블]
-- daily_sales (date, product_id, revenue)
+- daily_sales (sale_date, product_id, revenue)
 
 [Expected Output]
 product_id | max_consecutive_first_days
@@ -665,16 +665,18 @@ dept_id | median_salary
 
 #### C-1. 고객별 구매 비율 ★★★
 ```
-각 고객별로 총 구매 횟수, 전자제품 구매 횟수,
-전체 구매 금액 대비 전자제품 구매 비율을 구하고,
+각 고객별로 총 구매 횟수, 커피 구매 횟수,
+전체 구매 금액 대비 커피 구매 비율을 구하고,
 추가로 전체 고객 중 구매액 순위를 표시해주세요.
+(카페 DB이므로 '커피' 카테고리 기준)
 
 [테이블]
-- orders (id, user_id, product_id, amount, order_date)
+- orders (id, user_id, store_id, order_datetime, total_amount)
+- order_items (id, order_id, product_id, quantity, unit_price)
 - products (id, name, category, price)
 
 [Expected Output]
-user_id | total_order_cnt | elec_order_cnt | total_amount | elec_ratio | rank
+user_id | total_order_cnt | coffee_order_cnt | total_amount | coffee_ratio | rank
 ```
 
 #### C-2. 누적 매출 및 목표 달성률 ★★
@@ -695,10 +697,10 @@ year_month | monthly_revenue | cumulative_revenue | achievement_rate
 데이터가 7일 미만인 초기에는 있는 데이터만으로 평균을 계산합니다.
 
 [테이블]
-- daily_sales (date, revenue)
+- daily_sales (sale_date, product_id, revenue)
 
 [Expected Output]
-date | daily_revenue | moving_avg_7days
+sale_date | daily_revenue | moving_avg_7days
 ```
 
 #### C-4. 전일 대비 증감률 ★★
@@ -707,10 +709,10 @@ date | daily_revenue | moving_avg_7days
 첫날은 증감률을 NULL로 표시합니다.
 
 [테이블]
-- daily_visitors (date, visitor_count)
+- daily_visitors (visit_date, visitor_count)
 
 [Expected Output]
-date | visitor_count | prev_day_count | change_rate
+visit_date | visitor_count | prev_day_count | change_rate
 ```
 
 #### C-5. NULL 값 채우기 (Forward Fill) ★★★
@@ -720,13 +722,13 @@ date | visitor_count | prev_day_count | change_rate
 (참고: 5월 11일, 12일 연속 NULL입니다)
 
 [테이블]
-- daily_orders (date, number_of_orders)
+- daily_orders (order_date, number_of_orders)
 
 힌트: 단순히 LAG 함수가 아닌 특정 옵션을 줘야 실행됩니다
 (MySQL은 IGNORE NULLS 미지원 → 서브쿼리 활용)
 
 [Expected Output]
-date | filled_orders
+order_date | filled_orders
 ```
 
 #### C-6. 연속 증가 기간 ★★★
@@ -734,7 +736,7 @@ date | filled_orders
 주가 데이터에서 연속으로 상승한 최대 일수를 구하세요.
 
 [테이블]
-- stock_prices (date, price)
+- stock_prices (price_date, price)
 
 [Expected Output]
 max_consecutive_up_days
@@ -766,7 +768,7 @@ product_name | revenue | revenue_ratio | cumulative_ratio
 하루에 여러번 접속해도 1번으로 집계함
 
 [테이블]
-- user_logs (user_id, event_name, event_date)
+- app_logs (user_id, event_name, event_date, event_time)
 
 [Expected Output]
 cohort_month | diff_month | user_cnts
@@ -780,7 +782,7 @@ cohort_month | diff_month | user_cnts
 (M+0, M+1, M+2, M+3 컬럼으로)
 
 [테이블]
-- user_logs (user_id, event_date)
+- app_logs (user_id, event_name, event_date, event_time)
 
 [Expected Output]
 cohort_month | M0_users | M1_retention | M2_retention | M3_retention
@@ -796,6 +798,9 @@ MAU의 유저를 4가지 타입으로 구분해서 집계해주세요.
 - Current: 지난달에도 활동했고 이번달에도 활동한 사용자
 - Resurrected: 2개월 이상 활동하지 않다가 이번달에 다시 활동한 사용자
 - Dormant: 지난달에는 활동했지만 이번달에는 활동하지 않은 사용자
+
+[테이블]
+- app_logs (user_id, event_name, event_date, event_time)
 
 [Expected Output]
 year_month | user_type | user_cnts
@@ -821,7 +826,7 @@ signup_week | total_users | d1_retention | d3_retention | d7_retention
 "이탈 위험" 유저로 분류하여 출력하세요.
 
 [테이블]
-- user_logs (user_id, event_date)
+- app_logs (user_id, event_name, event_date, event_time)
 
 [Expected Output]
 user_id | last_activity_date | avg_visit_interval | days_since_last_visit
@@ -993,7 +998,7 @@ user_id | streak_start | streak_end | consecutive_days
 세션 시간(분), 첫 이벤트, 마지막 이벤트를 구하세요.
 
 [테이블]
-- event_logs (user_id, event_name, event_time)
+- app_logs (user_id, event_name, event_date, event_time)
 
 [Expected Output]
 user_id | session_id | event_count | session_duration_min | first_event | last_event
@@ -1063,7 +1068,7 @@ CAC(신규 고객 1명 획득 비용)를 계산하세요.
 [테이블]
 - users (id, created_at)
 - orders (id, user_id, order_date)
-- marketing_costs (month, channel, cost)
+- marketing_costs (ym, channel, cost)
 
 [Expected Output]
 year_month | marketing_cost | new_users | first_purchasers | cac | first_purchase_rate
@@ -1079,7 +1084,7 @@ UTM 파라미터로 유입 채널이 기록되어 있습니다.
 [테이블]
 - users (id, created_at, utm_source)
 - orders (id, user_id, total_amount, order_date)
-- marketing_costs (month, channel, cost)
+- marketing_costs (ym, channel, cost)
 
 [Expected Output]
 channel | ad_spend | attributed_users | attributed_revenue | roas_pct
@@ -1093,7 +1098,7 @@ LTV/CAC 비율을 구하세요. (3 이상이면 건강한 비즈니스)
 [테이블]
 - users (id, created_at, utm_source)
 - orders (id, user_id, total_amount, order_date)
-- marketing_costs (month, channel, cost)
+- marketing_costs (ym, channel, cost)
 
 [Expected Output]
 cohort_month | cohort_size | cac | ltv_12months | ltv_cac_ratio | health_status
