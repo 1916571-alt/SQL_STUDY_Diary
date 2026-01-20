@@ -63,9 +63,48 @@ USE practice;
 -- -------------------------------------------------
 --  1. A-4  미구매 회원 조회        ★★    LEFT JOIN + IS NULL
 --  2. A-6  상품별 리뷰 통계        ★★    기본 집계 워밍업
+SELECT product_id,
+       COUNT(user_id) AS review_count,
+       AVG(RATING) AS avg_rating,
+       MAX(RATING) as max_rating,
+       MIN(RATING) as min_rating
+FROM product_reviews
+group by product_id
+having COUNT(user_id) > 5
+ORDER BY avg_rating DESC
 --  3. A-3  고객 등급별 평균 구매   ★★    GROUP BY + 조건
+-- 재풀이 필요
+with base as(
+SELECT user_id,
+       SUM(total_amount) as order_amount,
+       count(*) as order_count
+FROM orders 
+where year(order_date) = 2024
+group by user_id)
+select u.grade,
+       avg(order_amount) as avg_order_amount,
+       avg(order_count) as avg_order_count,
+       count(b.user_id) as user_count
+from base b
+join users u
+on b.user_id = u.id
+group by u.grade
 --  4. A-1  작가별 판매 통계        ★★★   복합 JOIN
+SELECT a.name as author_name,
+       sum(bo.quantity) as total_sales,
+       round(avg(rating),2) as avg_rating,
+       count(r.id) as rated_book_cnt
+FROM book_orders bo
+join books b
+on bo.book_id = b.id
+join authors a
+on b.author_id = a.id
+join reviews r
+on r.book_id = bo.book_id
+group by a.name
+order by total_sales
 --  5. A-2  카테고리별 매출 TOP 3   ★★    서브쿼리 + 순위
+SELECT 
 --  6. A-5  재구매율 계산           ★★★   비율 계산
 --  7. A-7  신규/기존 고객 매출     ★★★   CTE + 조건 분기
 --  8. A-8  동시 구매 분석          ★★★   Self JOIN
