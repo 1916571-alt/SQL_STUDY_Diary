@@ -123,7 +123,10 @@ END AS time_slot
 | "누적합" | `SUM() OVER (ORDER BY date)` | 월별 누적 매출 |
 | "이동평균 (N일)" | `AVG() OVER (ROWS BETWEEN N-1 PRECEDING AND CURRENT ROW)` | 7일 이동평균 |
 | "비율/퍼센트" | `값 / SUM(값) OVER () * 100` | 전체 대비 비중 |
-| "~한 적 없는" | `LEFT JOIN + IS NULL` | 미구매 회원 |
+| "~한 적 없는" | `LEFT JOIN + IS NULL` 또는 `NOT EXISTS` | 미구매 회원 |
+| "~가 존재하는" | `EXISTS` | 특정 조건 주문 있는 회원 |
+| "없는 구간 채우기" | 재귀 CTE로 시리즈 생성 + `LEFT JOIN` | 모든 시간대 출력 |
+| "데이터 합치기" | `UNION ALL` (중복 허용) / `UNION` (중복 제거) | 온오프라인 통합 |
 | "~와 함께 구매" | `Self JOIN (같은 order_id)` | 동시 구매 상품 |
 | "첫 구매/첫 접속" | `MIN(date) GROUP BY user_id` | 코호트 분석 |
 | "연속 N일" | `날짜 - ROW_NUMBER() = 동일그룹` | 연속 로그인 |
@@ -190,6 +193,10 @@ END
 SUM(CASE WHEN category = '커피' THEN amount ELSE 0 END) AS coffee_amount
 COUNT(CASE WHEN status = 'completed' THEN 1 END) AS completed_count
 
+-- ⭐ 조건부 DISTINCT (매우 자주 출제!)
+COUNT(DISTINCT CASE WHEN category = '전자제품' THEN user_id END) AS elec_buyers
+COUNT(DISTINCT CASE WHEN order_count >= 2 THEN user_id END) AS repeat_buyers
+
 -- 크로스탭 (월별 피벗)
 SUM(CASE WHEN DATE_FORMAT(order_date, '%Y-%m') = '2024-01' THEN qty ELSE 0 END) AS `2024-01`
 ```
@@ -215,6 +222,8 @@ column / NULLIF(divisor, 0)
 CONCAT(str1, '-', str2)             -- 문자열 연결
 SUBSTRING(str, start, length)       -- 부분 문자열
 LEFT(str, n), RIGHT(str, n)
+REPLACE(str, from, to)              -- 문자열 치환
+TRIM(str)                           -- 양쪽 공백 제거
 
 -- 전화번호 포맷: 01012345678 → 010-1234-5678
 CONCAT(
@@ -222,6 +231,19 @@ CONCAT(
     SUBSTRING(phone, 4, 4), '-',
     SUBSTRING(phone, 8, 4)
 ) AS formatted_phone
+
+-- 패턴 매칭
+LIKE '%키워드%'                     -- 포함
+LIKE '김%'                          -- ~로 시작
+NOT LIKE '%test%'                   -- 미포함
+
+-- 콤마 구분 옵션에서 특정 값 찾기 (MySQL)
+FIND_IN_SET('네비게이션', options)  -- options = '선루프,네비게이션,후방카메라'
+-- 결과: 2 (위치 반환, 없으면 0)
+
+-- 정규식 (REGEXP)
+WHERE name REGEXP '^[가-힣]+$'      -- 한글만
+WHERE phone REGEXP '^010'           -- 010으로 시작
 ```
 
 ### 2-6. 숫자 함수
@@ -339,14 +361,36 @@ FROM numbered;
 
 ## 4. JOIN 패턴
 
-### 4-1. 미구매 회원 (LEFT JOIN + IS NULL)
+### 4-1. 미구매 회원 - 2가지 방법
+
 ```sql
-SELECT u.id, u.name, u.created_at
+-- 방법1: LEFT JOIN + IS NULL (익숙한 방식)
+SELECT u.id, u.name
 FROM users u
 LEFT JOIN orders o ON u.id = o.user_id
-WHERE DATE_FORMAT(u.created_at, '%Y-%m') = '2024-01'
-  AND o.user_id IS NULL;
+WHERE o.user_id IS NULL;
+
+-- 방법2: NOT EXISTS (더 안전! 중복 문제 없음)
+SELECT u.id, u.name
+FROM users u
+WHERE NOT EXISTS (
+    SELECT 1 FROM orders o WHERE o.user_id = u.id
+);
+
+-- EXISTS: "조건 만족하는 주문이 있는 회원"
+SELECT u.id, u.name
+FROM users u
+WHERE EXISTS (
+    SELECT 1 FROM orders o
+    WHERE o.user_id = u.id
+      AND o.total_amount >= 100000
+);
 ```
+
+**언제 NOT EXISTS가 더 좋은가?**
+- JOIN 시 1:N 관계에서 중복 뻥튀기 방지
+- 복잡한 조건 (여러 테이블 조건 조합)
+- "존재 여부"만 확인할 때
 
 ### 4-2. 동시 구매 분석 (Self JOIN)
 ```sql
@@ -516,9 +560,154 @@ FROM user_summary
 GROUP BY bucket;
 ```
 
+### 5-7. 날짜 시리즈 생성 (없는 행 만들기)
+```sql
+-- "모든 시간대 출력하되, 주문 없으면 0" (입양 시각 구하기 2)
+-- 재귀 CTE로 0~23시 생성
+WITH RECURSIVE hours AS (
+    SELECT 0 AS hour
+    UNION ALL
+    SELECT hour + 1 FROM hours WHERE hour < 23
+)
+SELECT
+    h.hour,
+    COUNT(o.id) AS order_count
+FROM hours h
+LEFT JOIN orders o ON HOUR(o.order_datetime) = h.hour
+GROUP BY h.hour
+ORDER BY h.hour;
+
+-- 날짜 시리즈 생성 (2024-01-01 ~ 2024-01-31)
+WITH RECURSIVE dates AS (
+    SELECT DATE('2024-01-01') AS date
+    UNION ALL
+    SELECT DATE_ADD(date, INTERVAL 1 DAY)
+    FROM dates
+    WHERE date < '2024-01-31'
+)
+SELECT
+    d.date,
+    COALESCE(SUM(o.total_amount), 0) AS daily_revenue
+FROM dates d
+LEFT JOIN orders o ON DATE(o.order_date) = d.date
+GROUP BY d.date;
+```
+
+### 5-8. Top N - 서브쿼리 풀이 (윈도우 없이)
+```sql
+-- 윈도우 함수 없이 그룹별 MAX만 뽑기
+-- 카테고리별 최고 매출 상품
+SELECT p.category, p.name, p.revenue
+FROM products p
+WHERE p.revenue = (
+    SELECT MAX(p2.revenue)
+    FROM products p2
+    WHERE p2.category = p.category
+);
+
+-- Top 3 (동점자 포함)
+SELECT p.category, p.name, p.revenue
+FROM products p
+WHERE (
+    SELECT COUNT(DISTINCT p2.revenue)
+    FROM products p2
+    WHERE p2.category = p.category
+      AND p2.revenue >= p.revenue
+) <= 3;
+```
+
 ---
 
-## 6. 자주 틀리는 실수 체크리스트
+## 6. UNION / UNION ALL
+
+```sql
+-- UNION: 중복 제거 (DISTINCT)
+SELECT name, 'orders' AS source FROM orders
+UNION
+SELECT name, 'returns' AS source FROM returns;
+
+-- UNION ALL: 그대로 붙임 (빠름, 중복 허용)
+SELECT product_id, quantity, 'online' AS channel FROM online_sales
+UNION ALL
+SELECT product_id, quantity, 'offline' AS channel FROM offline_sales;
+```
+
+**필수 규칙:**
+- 컬럼 개수 동일해야 함
+- 컬럼 타입 호환되어야 함
+- 컬럼명은 첫 번째 SELECT 기준
+- `ORDER BY`는 맨 마지막에만 (전체 결과 정렬)
+
+```sql
+-- 올바른 예
+SELECT id, name FROM a
+UNION ALL
+SELECT id, name FROM b
+ORDER BY id;  -- 맨 마지막에만!
+```
+
+---
+
+## 7. 날짜 경계 함정 (BETWEEN 주의!)
+
+### BETWEEN은 양끝 포함!
+```sql
+-- BETWEEN은 이상/이하 (>=, <=)
+WHERE date BETWEEN '2024-01-01' AND '2024-01-31'
+-- = WHERE date >= '2024-01-01' AND date <= '2024-01-31'
+
+-- ⚠️ DATETIME에서 함정!
+WHERE order_datetime BETWEEN '2024-01-01' AND '2024-01-31'
+-- 2024-01-31 00:00:00 까지만 포함! (23:59:59 제외)
+
+-- 안전한 방법
+WHERE order_datetime >= '2024-01-01'
+  AND order_datetime < '2024-02-01'  -- 다음날 미만
+```
+
+### 기간 계산: +1 해야 할 때
+```sql
+-- 대여 기간, 숙박 일수, 근무일 등은 +1
+-- 1월 1일 ~ 1월 3일 = 3일 (1,2,3일)
+DATEDIFF(end_date, start_date) + 1 AS rental_days
+
+-- 단순 경과 일수는 그대로
+-- 1월 1일 가입 → 1월 3일 현재 = 2일 경과
+DATEDIFF(CURDATE(), signup_date) AS days_since_signup
+```
+
+---
+
+## 8. 윈도우 프레임 함정
+
+### ROWS vs RANGE
+```sql
+-- ROWS: 물리적 행 기준 (정확히 N행)
+AVG(val) OVER (ORDER BY date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)
+-- → 정확히 현재 포함 3행 평균
+
+-- RANGE: 논리적 값 기준 (같은 값이면 모두 포함)
+AVG(val) OVER (ORDER BY date RANGE BETWEEN 2 PRECEDING AND CURRENT ROW)
+-- → 같은 날짜가 여러 개면 모두 포함!
+
+-- ⚠️ 기본값이 RANGE인 경우가 있어서, 명시적으로 ROWS 쓰는 게 안전
+```
+
+### LAST_VALUE 함정
+```sql
+-- ❌ 기대와 다른 결과 (기본 프레임 문제)
+LAST_VALUE(name) OVER (PARTITION BY dept ORDER BY salary)
+
+-- ✅ 올바른 방법: 프레임 명시
+LAST_VALUE(name) OVER (
+    PARTITION BY dept ORDER BY salary
+    ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+)
+```
+
+---
+
+## 9. 자주 틀리는 실수 체크리스트
 
 | 실수 | 올바른 방법 |
 |-----|-----------|
@@ -527,13 +716,16 @@ GROUP BY bucket;
 | 0으로 나누기 | `/ NULLIF(divisor, 0)` |
 | `COUNT(*)`가 NULL 제외라고 착각 | `COUNT(*)` = NULL 포함, `COUNT(col)` = NULL 제외 |
 | `GROUP BY`에 없는 컬럼 SELECT | 집계 아닌 컬럼은 모두 `GROUP BY`에 |
-| `HAVING`에서 별칭 사용 (다른 DB) | MySQL은 가능, 다른 DB는 원래 표현식 |
 | `DAYOFWEEK` 시작일 혼동 | 1=일요일 (vs `WEEKDAY` 0=월요일) |
 | `TIMESTAMPDIFF` 순서 | `(단위, 시작일, 종료일)` - 작은 날짜 먼저! |
+| `BETWEEN` datetime 함정 | `>= start AND < next_day` 가 안전 |
+| `UNION` 컬럼 불일치 | 컬럼 개수/타입/순서 일치 필수 |
+| 기간 계산 +1 누락 | 대여일수 = `DATEDIFF() + 1` |
+| `LAST_VALUE` 기본 프레임 | `ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING` 명시 |
 
 ---
 
-## 7. Quick Reference (복붙용)
+## 10. Quick Reference (복붙용)
 
 ```sql
 -- 월별 집계
@@ -558,40 +750,54 @@ ROUND((현재 - 이전) / NULLIF(이전, 0) * 100, 2)
 -- 누적합
 SUM(val) OVER (ORDER BY date)
 
--- 7일 이동평균
+-- 7일 이동평균 (ROWS 명시!)
 AVG(val) OVER (ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW)
 
 -- 미구매 회원
-LEFT JOIN ... WHERE o.id IS NULL
+NOT EXISTS (SELECT 1 FROM orders o WHERE o.user_id = u.id)
+
+-- 조건부 DISTINCT
+COUNT(DISTINCT CASE WHEN 조건 THEN user_id END)
 
 -- NULL 대체
 COALESCE(a, b, 0)
-IFNULL(column, 0)
 
 -- 조건부 집계
 SUM(CASE WHEN 조건 THEN 값 ELSE 0 END)
 
--- 비율 계산
-COUNT(*) * 100.0 / SUM(COUNT(*)) OVER ()
+-- 날짜 시리즈 생성 (재귀)
+WITH RECURSIVE nums AS (SELECT 0 AS n UNION ALL SELECT n+1 FROM nums WHERE n<23)
+
+-- 대여/숙박 기간
+DATEDIFF(end_date, start_date) + 1
+
+-- 안전한 날짜 범위
+WHERE date >= '2024-01-01' AND date < '2024-02-01'
 
 -- 연속 패턴
 DATE_SUB(date, INTERVAL ROW_NUMBER() OVER (...) DAY) AS grp
+
+-- 콤마 구분 옵션 검색
+FIND_IN_SET('네비게이션', options) > 0
 ```
 
 ---
 
-## 8. 문제 접근 순서
+## 11. 문제 접근 순서
 
 ```
 1. 최종 Output 형태 파악 (어떤 컬럼?)
 2. 필요한 테이블/컬럼 확인
-3. 중간 Output 설계 (CTE로 단계 분리)
-4. 단계별 쿼리 작성 & 검증
-5. 최종 쿼리 조합
+3. "없는 행"이 필요한지 체크 (시리즈 생성?)
+4. 중간 Output 설계 (CTE로 단계 분리)
+5. 단계별 쿼리 작성 & 검증
+6. 최종 쿼리 조합
 
 💡 디버깅: CTE 중간에서 SELECT * FROM step1; 로 확인
+💡 날짜 범위: BETWEEN 대신 >= AND < 고려
+💡 중복 체크: JOIN 결과가 뻥튀기되는지 확인
 ```
 
 ---
 
-*Created: 2026-01-21 | Based on 43 Practice Problems + Programmers + Solve_SQL_2025*
+*Updated: 2026-01-21 | Based on 43 Practice Problems + Programmers + Solve_SQL_2025 + GPT Review*
