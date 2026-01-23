@@ -14,3 +14,8 @@ Thumbs.db
 *.tmp
 *.temp
 tmpclaude-*
+
+# Resume & Portfolio (별도 레포에서 관리)
+*이력서*
+*포트폴리오*
+resume_*.md
